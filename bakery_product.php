@@ -1,3 +1,14 @@
+<?php
+include('./conn.php');
+$product_id = $_GET['product_id'];
+$sql = "SELECT * FROM product WHERE pd_id = $product_id";
+$result = mysqli_query($conn, $sql);
+if (mysqli_num_rows($result) == 0 or mysqli_num_rows($result) == null) {
+  exit;
+}
+$row = mysqli_fetch_assoc($result);
+include './function/getNumOfCart.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,8 +25,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/bakery_product.css">
   <link rel="stylesheet" href="css/navbar.css">
-
   <title>Document</title>
+  <script>
+    function addToCart(product_id) {
+      const product_id = product_id
+      let qty = document.form1.input1.value
+      alert(product_id, qty)
+    }
+  </script>
 </head>
 
 <body>
@@ -94,40 +111,53 @@
           <div class="row card_index" id="box">
             <div class="col-lg-6">
               <div class="card " style="width: 18rem;">
-                <img class="card-img-top" src="img/green-tea-crepe-cake-green-tea-iced_45463-549 (2).jpg" style="border-radius: 7px;box-shadow: white 10px 10px 1px;" alt="Card image cap">
+                <img class="card-img-top" src="<?php echo $row['pd_img'] ?>" style="border-radius: 7px;box-shadow: white 10px 10px 1px;" alt="Card image cap">
               </div>
             </div>
             <div class="col-lg-6" id="detail">
-              <h3>เครปเค้กชาเขียว</h3>
+              <h3><?php echo $row['pd_name'] ?></h3>
               <table>
                 <tr>
                   <td class="float">ราคา</td>
                   <td class="float">:</td>
-                  <td class="td">80 บาท</td>
+                  <td class="td"><?php echo $row['pd_price'] ?></td>
                 </tr>
 
                 <tr>
                   <td class="float">วันหมดอายุ</td>
                   <td class="float">:</td>
-                  <td class="td">หลังจาก 5 วัน (แช่เย็น)</td>
+                  <td class="td">หลังจาก <?php echo $row['pd_des'] ?> วัน (แช่เย็น)</td>
                 </tr>
                 <tr>
                   <td class="float">จำนวน</td>
                   <td class="float">:</td>
                   <td class="td">
                     <form name=form1>
-                      <input class="btn-de" type=button value=" - " onclick="document.form1.input1.value--">
-                      <input class="btn-num" name=input1 value="1" size=4 onfocus="buffer=this.value" onchange="if (isNaN(this.value)) {this.value=buffer}">
+                      <input class="btn-de" type="button" value=" - " onclick="document.form1.input1.value--">
+                      <input class="btn-num" name="input1" value="1" size=4 onfocus="buffer=this.value" onchange="if (isNaN(this.value)) {this.value=buffer}">
                       <input class="btn-pl" type=button value=" + " onclick="document.form1.input1.value++">
                     </form>
                   </td>
                 </tr>
               </table>
 
-
-
-              <center><button type="button" style="margin-top: 2em;" class="btn btn-outline-secondary btn-lg">เพิ่มไปยังรถเข็น</button></center>
+              <center><button type="button" style="margin-top: 2em;" class="btn btn-outline-secondary btn-lg" onclick="addcart(<?php echo $row['pd_id'] ?>)">เพิ่มไปยังรถเข็น</button></center>
               <!-- <button type="button" class="btn btn-outline-dark btn-lg" >ซื้อสินค้า</button> -->
+              <script>
+                function addcart(pd_id) {
+                  const product_id = pd_id
+                  let qty = document.form1.input1.value
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                      // document.getElementById("page5").click();
+                      console.log(xhttp.responseText)
+                    }
+                  };
+                  xhttp.open("GET", "./function/insertToCart.php?product_id=" + product_id+"&qty="+qty, true);
+                  xhttp.send();
+                }
+              </script>
             </div>
             <div class="col-md-2"></div>
           </div>

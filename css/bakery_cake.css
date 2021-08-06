@@ -24,3 +24,11 @@ a:hover {
     padding: 10px;
     border-radius: 15px;
 }
+
+.noti {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: red;
+    color: white;
+}

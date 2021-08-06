@@ -1,3 +1,10 @@
+<?php
+include './connect/connectdb.php';
+session_start();
+$username = $_SESSION['user_username'];
+$sql = "SELECT * FROM cart JOIN product on cart.pd_id = product.pd_id WHERE user_username = '$username'";
+$result = mysqli_query($conn, $sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -85,7 +92,7 @@
                     <div class="row">
                         <span>
                             <h3 style="float: left; margin-left:1em;">สินค้าในตะกร้า</h3>
-                            <h3 style="float: right; margin-right:1em;">1 รายการ</h3>
+                            <h3 style="float: right; margin-right:1em;"><?php echo mysqli_num_rows($result)?> รายการ</h3>
                         </span>
                         <hr>
                         <div class="col">
@@ -96,15 +103,23 @@
                                     <td style="width: 10em;text-align:center;">ราคา</td>
                                 </thead>
                                 <tbody>
-                                    <td><img src="img/seta.png" width="100" height="100" alt=""> <b>Set A</b></td>
-                                    <td style="text-align:center;">
-                                        <form name=form1>
-                                            <input class="btn-de" type=button value=" - " onclick="document.form1.input1.value--">
-                                            <input class="btn-num" name=input1 value="1" size=4 onfocus="buffer=this.value" onchange="if (isNaN(this.value)) {this.value=buffer}">
-                                            <input class="btn-pl" type=button value=" + " onclick="document.form1.input1.value++">
-                                        </form>
-                                    </td>
-                                    <td style="text-align:center;"><b>100 บาท</b></td>
+                                    <?php
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                    ?>
+                                        <tr>
+                                            <td><img src="<?php echo $row['pd_img'] ?>" width="100" height="100" alt=""> <b><?php echo $row['pd_name'] ?></b></td>
+                                            <td style="text-align:center;">
+                                                <form name=form1>
+                                                    <input class="btn-de" type=button value=" - " onclick="document.form1.input1.value--">
+                                                    <input class="btn-num" name=input1 value="<?php echo $row['qty'] ?>" size=4 onfocus="buffer=this.value" onchange="if (isNaN(this.value)) {this.value=buffer}">
+                                                    <input class="btn-pl" type=button value=" + " onclick="document.form1.input1.value++">
+                                                </form>
+                                            </td>
+                                            <td style="text-align:center;"><b><?php echo $row['pd_price'] ?> บาท</b></td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>

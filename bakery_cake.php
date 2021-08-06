@@ -1,4 +1,5 @@
-<?php include "./connect/connectdb.php" ?>
+<?php include "./connect/connectdb.php";
+include "./function/getNumOfCart.php"; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,8 +58,10 @@
                 <a class="nav-link nav_menu" href="contact.php">ติดต่อเรา</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#ตะกร้าของฉัน">
-                  <img class="icon_cart" src="img/cart.png" alt="" width="25">
+                <a class="nav-link" href="bakery_mycart.php">
+                  <div class="noti" style="width: 30px;height: 30px;background-color: red;color:white;border-radius:100%">
+                    <?php echo $numOfCart ?><img class="icon_cart" src="img/cart.png" alt="" width="25">
+                  </div>
                 </a>
               </li>
               <li id="cart" class="nav-item">
@@ -92,22 +95,22 @@
       <div class="col-lg-8 col-xl-8 col-md-12 col-sm-12 col-12">
 
         <div class="row">
-        <?php
-                $sql = "SELECT * FROM product";
-                $result = mysqli_query($conn, $sql);
-                while ($row = mysqli_fetch_array($result)) {
-                ?>
-          <div class="col-lg-4 col-xl-4 col-md-12 col-sm-12 col-12">
-            <a href="bakery_product.php">
-            <div class="card card_index">
-              <img src="<?php echo $row["pd_img"] ?>" height="400" class="card-img-top" alt="...">
-              <div class="card-body">
-                <span class="card-text"><?php echo $row["pd_name"] ?></span>
-                <p class="card-text" style="float: right;"><?php echo $row["pd_price"] ?>.-</p>
-              </div>
+          <?php
+          $sql = "SELECT * FROM product";
+          $result = mysqli_query($conn, $sql);
+          while ($row = mysqli_fetch_array($result)) {
+          ?>
+            <div class="col-lg-4 col-xl-4 col-md-12 col-sm-12 col-12">
+              <a href="bakery_product.php?product_id=<?php echo $row['pd_id'] ?>">
+                <div class="card card_index">
+                  <img src="<?php echo $row["pd_img"] ?>" height="400" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <span class="card-text"><?php echo $row["pd_name"] ?></span>
+                    <p class="card-text" style="float: right;"><?php echo $row["pd_price"] ?>.-</p>
+                  </div>
+                </div>
+              </a>
             </div>
-          </a>
-          </div>
           <?php } ?>
         </div> <!-- row  -->
       </div>
